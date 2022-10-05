@@ -1,0 +1,10 @@
+2.2 K means sur simplex
+
+    le temps de calcul total pour le k-means et les metrics est de 2689.94 ms 
+    On arrive bien à retrouver le nombre optimal de cluster
+    
+2.3 Tous les jeux de données contenant des formes ciculaires sont des exemples pour lesquels il y aura des difficultés de calcul.
+D'autres exemples comme complex8 ou encore banana dans lesquels les 3 méthodes ne donnent pas le même nombre de clusters*
+ca confirme bien nos choiiiiix
+
+2.4  
