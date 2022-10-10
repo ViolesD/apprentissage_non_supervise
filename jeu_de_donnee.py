@@ -4,6 +4,7 @@
 Created on Wed Oct  5 10:07:25 2022
 
 @author: violes
+=> fact
 """
 import numpy as np
 import matplotlib.pyplot as plt
@@ -25,7 +26,19 @@ from scipy.io import arff
 
 
 path = './artificial/'
-databrut = arff.loadarff(open(path+"xclara.arff",'r'))
+# databrut = arff.loadarff(open(path+"xclara.arff",'r'))
+# databrut = arff.loadarff(open(path+"atom.arff",'r'))
+databrut = arff.loadarff(open(path+"donut1.arff",'r'))
+# databrut = arff.loadarff(open(path+"dense-disk-3000.arff",'r'))
+# databrut = arff.loadarff(open(path+"insect.arff",'r'))
+databrut = arff.loadarff(open(path+"smile1.arff",'r'))
+# databrut = arff.loadarff(open(path+"xor.arff",'r'))
+# databrut = arff.loadarff(open(path+"twodiamonds.arff",'r'))
+# databrut = arff.loadarff(open(path+"twenty.arff",'r'))
+# databrut = arff.loadarff(open(path+"square5.arff",'r'))
+databrut = arff.loadarff(open(path+"spiral.arff",'r'))
+# databrut = arff.loadarff(open(path+"xclara.arff",'r'))
+# databrut = arff.loadarff(open(path+"xclara.arff",'r'))
 data = [[x[0],x[1]] for x in databrut[0]]
 
 #Affichage een 2D

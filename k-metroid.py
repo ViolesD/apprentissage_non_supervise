@@ -45,12 +45,50 @@ plt.show()
 
 
 tps1 = time.time()
-k=3
-distmatrix= euclidean_distances( datanp )
-fp = kmedoids.fasterpam(distmatrix, k)
+silhouette =[]
+davies = []
+calinski = []
+distmatrix = []
+
+# distmatrix=euclidean_distances( datanp )
+distmatrix=manhattan_distances(datanp)
+
+for k in range(2,20):
+# k=3
+    fp = kmedoids.fasterpam(distmatrix, k)
+    
+    silhouette.append(metrics.silhouette_score(datanp,fp.labels))
+    davies.append(metrics.davies_bouldin_score(datanp,fp.labels))
+    calinski.append(metrics.calinski_harabasz_score(datanp,fp.labels))
+    
+   
+if(np.argmax(silhouette) == np.argmin(davies) and np.argmin(davies) == np.argmax(calinski) ):
+    k = np.argmax(calinski) +2
+    print("On a trouvé un gagnant : " + str(k)+ " clusters")
+    
+
+else:
+    k=2;
+    
+
+fp = kmedoids.fasterpam(distmatrix, int(k))
+
+model = cluster.KMeans ( n_clusters=k , init ='k-means++')
+model.fit( datanp )
+
+randscore = metrics.rand_score(fp.labels,model.labels_)
+print("Similarité rand_score : ", randscore)
+
+mutual = metrics.mutual_info_score(fp.labels,model.labels_)
+print("Similarité mutual_information : ", mutual )        
+
 tps2 = time.time( )
 iter_kmed = fp.n_iter
 labels_kmed = fp.labels
+
+
+
+
 print( "Loss with FasterPAM : " , fp.loss )
 plt.scatter( f0 , f1 , c=labels_kmed , s =8)
 plt.title( "Donnees apres clustering KMedoids " )
