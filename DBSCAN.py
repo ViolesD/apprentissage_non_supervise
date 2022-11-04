@@ -41,22 +41,40 @@ plt.show()
 
 # Distances k plus proches voisins
 # Donnees dans X
-k = 5
-neigh = neighbors.NearestNeighbors ( n_neighbors = k )
-neigh.fit ( datanp )
-distances,indices = neigh.kneighbors ( datanp )
-# retirer le point " origine "
-newDistances = np.asarray ( [ np.average ( distances [ i ] [ 1 : ] ) for i in range (0 ,distances.shape [ 0 ] ) ] )
-trie = np.sort ( newDistances )
-plt.title ( " Plus proches voisins ( 5 ) " )
-plt.plot ( trie ) ;
-plt.show ()
 
-tps1 = time.time ()
+silhouette =[]
+davies = []
+calinski = []
 
-for k in range(1,10):
-    #TODO changer min_amples en fonction de k et eps en fonction du distance k plus proches max element (genre 3.0 ici)  
-    model = cluster.DBSCAN(min_samples=7,eps=1.2)
+for k in range(2,10):
+      
+    neigh = neighbors.NearestNeighbors ( n_neighbors = k )
+    neigh.fit ( datanp )
+    distances,indices = neigh.kneighbors ( datanp )
+    # retirer le point " origine "
+    newDistances = np.asarray ( [ np.average ( distances [ i ] [ 1 : ] ) for i in range (0 ,distances.shape [ 0 ] ) ] )
+    
+    model = cluster.DBSCAN(min_samples=k,eps=newDistances)
+    solution = model.fit(datanp)
+    
+    silhouette.append(metrics.silhouette_score(datanp,solution.labels_))
+    davies.append(metrics.davies_bouldin_score(datanp,solution.labels_))
+    calinski.append(metrics.calinski_harabasz_score(datanp,solution.labels_))
+    
+   
+if(np.argmax(silhouette) == np.argmin(davies) and np.argmin(davies) == np.argmax(calinski) ):
+    k = np.argmax(calinski) +2
+    print("On a trouvé un gagnant : " + str(k)+ " clusters")
+    
+    
+    neigh = neighbors.NearestNeighbors ( n_neighbors = k )
+    neigh.fit ( datanp )
+    distances,indices = neigh.kneighbors ( datanp )
+    # retirer le point " origine "
+    newDistances = np.asarray ( [ np.average ( distances [ i ] [ 1 : ] ) for i in range (0 ,distances.shape [ 0 ] ) ] )
+    meanDistances = np.mean(newDistances) 
+    print(str(meanDistances))
+    model = cluster.DBSCAN(min_samples=k,eps=meanDistances)
 
 tpq2 = time.time ()
 
