@@ -18,14 +18,16 @@ from sklearn import neighbors
 
 from scipy.io import arff
 
+import hdbscan
+
 path = './artificial/'
-databrut = arff.loadarff(open(path+"xclara.arff",'r'))
-databrut = arff.loadarff(open(path + "square1.arff", 'r'))
-databrut = arff.loadarff(open(path+"sizes1.arff",'r'))
+#databrut = arff.loadarff(open(path+"xclara.arff",'r'))
+#databrut = arff.loadarff(open(path + "square1.arff", 'r'))
+#databrut = arff.loadarff(open(path+"sizes1.arff",'r'))
 databrut = arff.loadarff(open(path+"simplex.arff",'r'))
-databrut = arff.loadarff(open(path+"smile1.arff",'r'))
-databrut = arff.loadarff(open(path+"smile3.arff",'r'))
-databrut = arff.loadarff(open(path+"banana.arff",'r'))
+#databrut = arff.loadarff(open(path+"smile1.arff",'r'))
+#databrut = arff.loadarff(open(path+"smile3.arff",'r'))
+#databrut = arff.loadarff(open(path+"banana.arff",'r'))
 #databrut = arff.loadarff(open(path+"complex9.arff",'r'))
 
 
@@ -77,17 +79,48 @@ mean = newDistances.max()
 model = cluster.DBSCAN(min_samples=k, eps=mean)
 solution = model.fit(datanp)
 
+
+    
 labels = model.labels_
 n_clusters_ = len(set(labels)) - (1 if -1 in labels else 0)
 
 
 plt.scatter(f0, f1, c=labels, s=8)
-plt.title(" Resultat du clustering, nbr clusters: " + str(n_clusters_))
+plt.title(" Resultat du clustering DBSCAN, nbr clusters: " + str(n_clusters_))
 plt.show()
 
 tpq2 = time.time()
 
 
+silhouette = []
+davies = []
+calinski = []
+#HDBSCAN method
+for k in range(2, 10):
+    model = hdbscan.HDBSCAN(min_cluster_size=k)
+    solution = model.fit(datanp)
+
+    silhouette.append(metrics.silhouette_score(datanp, solution.labels_))
+    davies.append(metrics.davies_bouldin_score(datanp, solution.labels_))
+    calinski.append(metrics.calinski_harabasz_score(datanp, solution.labels_))
+
+if (np.argmax(silhouette) == np.argmin(davies) and np.argmin(davies) == np.argmax(calinski)):
+    k = np.argmax(calinski) + 2
+    print("On a trouvé un gagnant")
+else:
+    print("Pas trouvé")
+    k = 5
+    
+model = hdbscan.HDBSCAN(min_cluster_size=k)
+solution = model.fit(datanp)
+
+labels = model.labels_
+n_clusters_ = len(set(labels)) - (1 if -1 in labels else 0)
+
+
+plt.scatter(f0, f1, c=labels, s=8)
+plt.title(" Resultat du clustering HDBSCAN, nbr clusters: " + str(n_clusters_))
+plt.show()
 # for k in range(1,10):
 # model = cluster.AgglomerativeClustering( distance_threshold = k/20 , linkage = 'single' , n_clusters = None )
 # model = model.fit( datanp )
