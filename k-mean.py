@@ -15,7 +15,7 @@ from sklearn import metrics
 from scipy.io import arff
 
 path = './artificial/'
-# databrut = arff.loadarff(open(path+"xclara.arff",'r'))
+databrut = arff.loadarff(open(path+"xclara.arff",'r'))
 # databrut = arff.loadarff(open(path+"square1.arff",'r'))
 # databrut = arff.loadarff(open(path+"sizes1.arff",'r'))
 # databrut = arff.loadarff(open(path+"simplex.arff",'r'))
@@ -59,15 +59,21 @@ for k in range(2,20):
 if(np.argmax(silhouette) == np.argmin(davies) and np.argmin(davies) == np.argmax(calinski) ):
     k = np.argmax(calinski) +2
     print("On a trouvé un gagnant : " + str(k)+ " clusters")
-    
+    #k=2;
     model = cluster.KMeans ( n_clusters=k , init ='k-means++')
     model.fit( datanp )
-    
+else:
+    print("Aucun candidat sort du lot")
+    #choix par défaut
+    k=2;
+    model = cluster.KMeans(n_clusters=k, init='k-means++')
+    model.fit(datanp)
+
 tps2 = time.time( )
 labels = model.labels_
 iteration = model . n_iter_
 
 plt.scatter( f0 , f1 , c=labels , s =8)
-plt.title( "Donnees apres clustering Kmeans " )
+plt.title( "Donnees apres clustering Kmeans, k=2 " )
 plt.show()
 print( "nb clusters=" ,k , " , nb iter=",iteration, " , ... ... runtime = " , round ( ( tps2 - tps1) * 1000 , 2 ) , " ms " )

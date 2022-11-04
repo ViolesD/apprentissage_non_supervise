@@ -19,8 +19,8 @@ from sklearn import metrics
 from scipy.io import arff
 
 path = './artificial/'
-# databrut = arff.loadarff(open(path+"xclara.arff",'r'))
-databrut = arff.loadarff(open(path+"square1.arff",'r'))
+databrut = arff.loadarff(open(path+"xclara.arff",'r'))
+# databrut = arff.loadarff(open(path+"square1.arff",'r'))
 # databrut = arff.loadarff(open(path+"sizes1.arff",'r'))
 # databrut = arff.loadarff(open(path+"simplex.arff",'r'))
 # databrut = arff.loadarff(open(path+"smile1.arff",'r'))

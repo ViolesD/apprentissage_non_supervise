@@ -24,14 +24,14 @@ from sklearn.metrics.pairwise import manhattan_distances
 
 
 path = './artificial/'
-databrut = arff.loadarff(open(path+"xclara.arff",'r'))
-# databrut = arff.loadarff(open(path+"square1.arff",'r'))
-# databrut = arff.loadarff(open(path+"sizes1.arff",'r'))
-# databrut = arff.loadarff(open(path+"simplex.arff",'r'))
+#databrut = arff.loadarff(open(path+"xclara.arff",'r'))
+#databrut = arff.loadarff(open(path+"square1.arff",'r'))
+#databrut = arff.loadarff(open(path+"sizes1.arff",'r'))
+#databrut = arff.loadarff(open(path+"simplex.arff",'r'))
 
-# databrut = arff.loadarff(open(path+"smile3.arff",'r'))
-# databrut = arff.loadarff(open(path+"banana.arff",'r'))
-# databrut = arff.loadarff(open(path+"complex9.arff",'r'))
+databrut = arff.loadarff(open(path+"smile3.arff",'r'))
+databrut = arff.loadarff(open(path+"banana.arff",'r'))
+databrut = arff.loadarff(open(path+"complex9.arff",'r'))
 
 
 datanp = [[x[0],x[1]] for x in databrut[0]]
@@ -68,13 +68,15 @@ if(np.argmax(silhouette) == np.argmin(davies) and np.argmin(davies) == np.argmax
     
 
 else:
-    k=2;
+    k=9;
     
 
 fp = kmedoids.fasterpam(distmatrix, int(k))
 
 model = cluster.KMeans ( n_clusters=k , init ='k-means++')
 model.fit( datanp )
+
+
 
 randscore = metrics.rand_score(fp.labels,model.labels_)
 print("Similarité rand_score : ", randscore)
