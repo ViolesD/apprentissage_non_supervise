@@ -34,7 +34,9 @@ path = './artificial/'
 #datanp = [[x[0], x[1]] for x in databrut[0]]
 
 path2 = './dataset-rapport/'
-databrut = pd.read_csv(path2+"zz2.txt",sep=" ", encoding="ISO-8859-1", skipinitialspace=True)
+databrut = pd.read_csv(path2+"y1.txt",sep=" ", encoding="ISO-8859-1", skipinitialspace=True)
+
+
 
 datanp = databrut.to_numpy()
 
@@ -113,7 +115,11 @@ plt.scatter(f0, f1, c=labels, s=8)
 plt.title(" Resultat du clustering DBSCAN, nbr clusters: " + str(n_clusters_))
 plt.show()
 
-print(" ,...  runtime = " , round ( ( tps2 - tps1 ) * 1000 , 2 ) , " ms" )
+
+plt.scatter(f0, f1, c=labels, s=8)
+plt.title(" Resultat du clustering HDBSCAN, nbr clusters: " + str(n_clusters_))
+plt.show()
+print("nb clusters : " + str(n_clusters_) ," ,...  runtime = " , round ( ( tps2 - tps1 ) * 1000 , 2 ) , " ms" )
 
 
 

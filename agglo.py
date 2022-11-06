@@ -32,7 +32,7 @@ path = './artificial/'
 # datanp = [[x[0],x[1]] for x in databrut[0]]
 
 path2 = './dataset-rapport/'
-databrut = pd.read_csv(path2+"x2.txt",sep=" ", encoding="ISO-8859-1", skipinitialspace=True)
+databrut = pd.read_csv(path2+"x1.txt",sep=" ", encoding="ISO-8859-1", skipinitialspace=True)
 
 datanp = databrut.to_numpy()
 
@@ -105,7 +105,7 @@ model = cluster.AgglomerativeClustering( distance_threshold = k*5000 , linkage =
 model = model.fit( datanp )
 labels = model.labels_
 
-
+k = model.n_clusters_
 tps2 = time.time ()
 
 # Affichage clustering
@@ -143,15 +143,24 @@ elif (np.argmax(silhouette) == np.argmax(calinski)):
 else:
     print("Aucun candidat sort du lot")
 
+
 print(np.argmax(silhouette))
-print(np.argmax(davies))
+print(np.argmin(davies))
 print(np.argmax(calinski))
+
+model = cluster.AgglomerativeClustering( linkage = 'single' , n_clusters = k )
+model = model.fit ( datanp )
+
+
+
 
 tps2 = time.time ()
 
 labels = model.labels_
-kres = model.n_clusters_
+k = model.n_clusters_
 leaves = model.n_leaves_
+
+
 
 # Affichage clustering
 plt.scatter ( f0 , f1 , c = labels , s = 8 )

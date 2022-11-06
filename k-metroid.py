@@ -36,7 +36,7 @@ path = './artificial/'
 
 #pour les données spéciales
 path2 = './dataset-rapport/'
-databrut = pd.read_csv(path2+"x1.txt",sep=" ", encoding="ISO-8859-1", skipinitialspace=True)
+databrut = pd.read_csv(path2+"y1.txt",sep=" ", encoding="ISO-8859-1", skipinitialspace=True)
 
 datanp = databrut.to_numpy()
 
@@ -88,6 +88,35 @@ else:
     
 
 fp = kmedoids.fasterpam(distmatrix, int(k))
+
+
+#kmeans pour comparer 
+
+for k in range(2,20):
+    model = cluster.KMeans ( n_clusters=k , init ='k-means++')
+    model.fit( datanp )
+
+    silhouette.append(metrics.silhouette_score(datanp,model.labels_))
+    davies.append(metrics.davies_bouldin_score(datanp,model.labels_))
+    calinski.append(metrics.calinski_harabasz_score(datanp,model.labels_))
+
+if(np.argmax(silhouette) == np.argmin(davies) and np.argmin(davies) == np.argmax(calinski) ):
+    k = np.argmax(calinski) +2
+elif (np.argmin(davies) == np.argmax(calinski)):
+    k = np.argmax(calinski) +2
+elif (np.argmin(davies) == np.argmax(silhouette)):
+    k = np.argmax(silhouette) +2
+elif (np.argmax(silhouette) == np.argmax(calinski)):
+    k = np.argmax(calinski) +2
+else:
+    k=2;
+
+#on relance avec le meilleur modèle 
+model = cluster.KMeans ( n_clusters=k , init ='k-means++')
+model.fit( datanp )
+
+
+
 
 
 randscore = metrics.rand_score(fp.labels,model.labels_)
