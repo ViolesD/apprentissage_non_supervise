@@ -10,6 +10,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from scipy.io import arff
+import pandas as pd
 
 # Parser un fichier de données au format arff
 # data est un tableau d'exemples avec pour chacun
@@ -39,12 +40,20 @@ databrut = arff.loadarff(open(path+"smile1.arff",'r'))
 databrut = arff.loadarff(open(path+"spiral.arff",'r'))
 # databrut = arff.loadarff(open(path+"xclara.arff",'r'))
 # databrut = arff.loadarff(open(path+"xclara.arff",'r'))
+
 data = [[x[0],x[1]] for x in databrut[0]]
 
 #Affichage een 2D
 #Extraire chaque valeur de features pour en faire une liste
 #Ex pour f0 = [....]
 #Ex pour f1 = [....]
+path2 = './dataset-rapport/'
+databrut = pd.read_csv(path2+"zz1.txt",sep=" ", encoding="ISO-8859-1", skipinitialspace=True)
+
+data = databrut.to_numpy()
+
+
+
 f0= [f[0] for f in data]
 f1= [f[1] for f in data]
 

@@ -13,9 +13,10 @@ from sklearn import cluster
 from sklearn import metrics
 # repris de l'exemple d'avant
 from scipy.io import arff
+import pandas as pd
 
 path = './artificial/'
-databrut = arff.loadarff(open(path+"xclara.arff",'r'))
+# databrut = arff.loadarff(open(path+"xclara.arff",'r'))
 # databrut = arff.loadarff(open(path+"square1.arff",'r'))
 # databrut = arff.loadarff(open(path+"sizes1.arff",'r'))
 # databrut = arff.loadarff(open(path+"simplex.arff",'r'))
@@ -24,8 +25,11 @@ databrut = arff.loadarff(open(path+"xclara.arff",'r'))
 # databrut = arff.loadarff(open(path+"banana.arff",'r'))
 # databrut = arff.loadarff(open(path+"complex9.arff",'r'))
 
+path2 = './dataset-rapport/'
+databrut = pd.read_csv(path2+"zz1.txt",sep=" ", encoding="ISO-8859-1", skipinitialspace=True)
 
-datanp = [[x[0],x[1]] for x in databrut[0]]
+#datanp = [[x[0],x[1]] for x in databrut[0]]
+datanp = databrut.to_numpy()
 
 f0= [f[0] for f in datanp]
 f1= [f[1] for f in datanp]
@@ -58,7 +62,7 @@ for k in range(2,20):
 
 if(np.argmax(silhouette) == np.argmin(davies) and np.argmin(davies) == np.argmax(calinski) ):
     k = np.argmax(calinski) +2
-    print("On a trouvé un gagnant : " + str(k)+ " clusters")
+    print("On a trouvé un gagnant : k=" + str(k))
     #k=2;
     model = cluster.KMeans ( n_clusters=k , init ='k-means++')
     model.fit( datanp )

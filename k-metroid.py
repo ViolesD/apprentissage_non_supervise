@@ -21,7 +21,7 @@ import kmedoids
 from sklearn.metrics.pairwise import euclidean_distances
 from sklearn.metrics.pairwise import manhattan_distances
 
-
+import pandas as pd
 
 path = './artificial/'
 #databrut = arff.loadarff(open(path+"xclara.arff",'r'))
@@ -29,12 +29,15 @@ path = './artificial/'
 #databrut = arff.loadarff(open(path+"sizes1.arff",'r'))
 #databrut = arff.loadarff(open(path+"simplex.arff",'r'))
 
-databrut = arff.loadarff(open(path+"smile3.arff",'r'))
-databrut = arff.loadarff(open(path+"banana.arff",'r'))
-databrut = arff.loadarff(open(path+"complex9.arff",'r'))
+#databrut = arff.loadarff(open(path+"smile3.arff",'r'))
+#databrut = arff.loadarff(open(path+"banana.arff",'r'))
+#databrut = arff.loadarff(open(path+"complex9.arff",'r'))
 
+path2 = './dataset-rapport/'
+databrut = pd.read_csv(path2+"x1.txt",sep=" ", encoding="ISO-8859-1", skipinitialspace=True)
 
-datanp = [[x[0],x[1]] for x in databrut[0]]
+#datanp = [[x[0],x[1]] for x in databrut[0]]
+datanp = databrut.to_numpy()
 
 f0= [f[0] for f in datanp]
 f1= [f[1] for f in datanp]
@@ -64,7 +67,7 @@ for k in range(2,20):
    
 if(np.argmax(silhouette) == np.argmin(davies) and np.argmin(davies) == np.argmax(calinski) ):
     k = np.argmax(calinski) +2
-    print("On a trouvé un gagnant : " + str(k)+ " clusters")
+    print("On a trouvé un gagnant : k=" + str(k))
     
 
 else:
@@ -93,6 +96,6 @@ labels_kmed = fp.labels
 
 print( "Loss with FasterPAM : " , fp.loss )
 plt.scatter( f0 , f1 , c=labels_kmed , s =8)
-plt.title( "Donnees apres clustering KMedoids " )
+plt.title( "Données après clustering KMedoids " )
 plt.show ( )
-print("nb clusters =" ,k , " , nb iter =" , iter_kmed , " ,...  runtime = " , round ( ( tps2 - tps1 ) * 1000 , 2 ) , " ms" )
+print("number clusters =" ,k , " , nb iter =" , iter_kmed , " ,...  runtime = " , round ( ( tps2 - tps1 ) * 1000 , 2 ) , " ms" )
