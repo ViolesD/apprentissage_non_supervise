@@ -6,7 +6,6 @@ Created on Mon Oct 10 10:22:38 2022
 @author: violes
 """
 
-
 import numpy as np
 import scipy.cluster.hierarchy as shc
 import matplotlib.pyplot as plt
@@ -56,19 +55,19 @@ plt.show()
 # show_leaf_counts = False )
 # plt.show ()
 
-
 silhouette =[]
 davies = []
 calinski = []
 distmatrix = []
 
 
-# set di stance_threshold ( 0 ensures we compute the full tree )
 tps1 = time.time ()
+
+# set di stance_threshold ( 0 ensures we compute the full tree )
 for k in range(1,10):
     model = cluster.AgglomerativeClustering( distance_threshold = k*5000 , linkage = 'single' , n_clusters = None )
     model = model.fit( datanp )
-    tps2 = time.time ()
+
     labels = model.labels_
     k = model.n_clusters_
     leaves = model.n_leaves_
@@ -77,15 +76,37 @@ for k in range(1,10):
         silhouette.append(metrics.silhouette_score(datanp,labels))
         davies.append(metrics.davies_bouldin_score(datanp,model.labels_))
         calinski.append(metrics.calinski_harabasz_score(datanp,model.labels_))
+    else:
+        silhouette.append(99999999)
+        davies.append(-99999999)
+        calinski.append(99999999)
 
 
 if(np.argmax(silhouette) == np.argmin(davies) and np.argmin(davies) == np.argmax(calinski) ):
     k = np.argmax(calinski) +2
     print("On a trouvé un gagnant : k= " + str(k))
 
-    model = cluster.AgglomerativeClustering( distance_threshold = k*5000 , linkage = 'single' , n_clusters = None )
-    model = model.fit( datanp )
-    labels = model.labels_
+elif (np.argmin(davies) == np.argmax(calinski)):
+    k = np.argmax(calinski) +2
+    print("On a trouvé un semi-gagnant : k=" + str(k))
+elif (np.argmin(davies) == np.argmax(silhouette)):
+    k = np.argmax(silhouette) +2
+    print("On a trouvé un semi-gagnant : k=" + str(k))   
+elif (np.argmax(silhouette) == np.argmax(calinski)):
+    k = np.argmax(calinski) +2
+    print("On a trouvé un semi-gagnant : k=" + str(k))
+else:
+    print("Aucun candidat sort du lot")
+    #choix par défaut en fonction de ce que l'on veut plus voir
+    k=2;
+
+
+model = cluster.AgglomerativeClustering( distance_threshold = k*5000 , linkage = 'single' , n_clusters = None )
+model = model.fit( datanp )
+labels = model.labels_
+
+
+tps2 = time.time ()
 
 # Affichage clustering
 plt.scatter ( f0 , f1 , c = labels , s = 8 )
@@ -96,7 +117,6 @@ print (" nb clusters = " , k , " , nb feuilles = " , leaves ,
 
 
 # set the number of clusters
-
 k = 4
 tps1 = time.time ()
 for k in range(2,50):
@@ -113,15 +133,14 @@ if(np.argmax(silhouette) == np.argmin(davies) and np.argmin(davies) == np.argmax
     print("On a trouvé un gagnant : k=" + str(k))
 elif (np.argmin(davies) == np.argmax(calinski)):
     k = np.argmax(calinski) +2
-    print("On a trouvé un gagnant : k=" + str(k))
+    print("On a trouvé un semi-gagnant : k=" + str(k))
 elif (np.argmin(davies) == np.argmax(silhouette)):
     k = np.argmax(silhouette) +2
-    print("On a trouvé un gagnant : k=" + str(k))  
+    print("On a trouvé un semi-gagnant : k=" + str(k))  
 elif (np.argmax(silhouette) == np.argmax(calinski)):
     k = np.argmax(calinski) +2
-    print("On a trouvé un gagnant : k=" + str(k))
+    print("On a trouvé un semi-gagnant : k=" + str(k))
 else:
-
     print("Aucun candidat sort du lot")
 
 print(np.argmax(silhouette))
@@ -129,6 +148,7 @@ print(np.argmax(davies))
 print(np.argmax(calinski))
 
 tps2 = time.time ()
+
 labels = model.labels_
 kres = model.n_clusters_
 leaves = model.n_leaves_

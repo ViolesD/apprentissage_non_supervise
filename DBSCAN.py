@@ -31,7 +31,6 @@ path = './artificial/'
 #databrut = arff.loadarff(open(path+"banana.arff",'r'))
 #databrut = arff.loadarff(open(path+"complex9.arff",'r'))
 
-
 #datanp = [[x[0], x[1]] for x in databrut[0]]
 
 path2 = './dataset-rapport/'
@@ -50,11 +49,13 @@ plt.show()
 # Donnees dans X
 
 tps1 = time.time()
+
 silhouette = []
 davies = []
 calinski = []
 
 for k in range(2, 10):
+
     neigh = neighbors.NearestNeighbors(n_neighbors=k)
     neigh.fit(datanp)
     distances, indices = neigh.kneighbors(datanp)
@@ -64,13 +65,18 @@ for k in range(2, 10):
 
     model = cluster.DBSCAN(min_samples=k, eps=mean)
     solution = model.fit(datanp)
+
     labels = solution.labels_
-    
     n_clusters_ = len(set(labels)) - (1 if -1 in labels else 0)
+
     if (n_clusters_!=1):
         silhouette.append(metrics.silhouette_score(datanp, solution.labels_))
         davies.append(metrics.davies_bouldin_score(datanp, solution.labels_))
         calinski.append(metrics.calinski_harabasz_score(datanp, solution.labels_))
+    else:
+        silhouette.append(99999999)
+        davies.append(-99999999)
+        calinski.append(99999999)
 
 if (np.argmax(silhouette) == np.argmin(davies) and np.argmin(davies) == np.argmax(calinski)):
     k = np.argmax(calinski) + 2
@@ -106,11 +112,13 @@ tps2 = time.time()
 plt.scatter(f0, f1, c=labels, s=8)
 plt.title(" Resultat du clustering DBSCAN, nbr clusters: " + str(n_clusters_))
 plt.show()
+
 print(" ,...  runtime = " , round ( ( tps2 - tps1 ) * 1000 , 2 ) , " ms" )
 
 
 
 tps1 = time.time()
+
 silhouette = []
 davies = []
 calinski = []
@@ -154,26 +162,3 @@ plt.scatter(f0, f1, c=labels, s=8)
 plt.title(" Resultat du clustering HDBSCAN, nbr clusters: " + str(n_clusters_))
 plt.show()
 print("nb clusters : " + str(n_clusters_) ," ,...  runtime = " , round ( ( tps2 - tps1 ) * 1000 , 2 ) , " ms" )
-# for k in range(1,10):
-# model = cluster.AgglomerativeClustering( distance_threshold = k/20 , linkage = 'single' , n_clusters = None )
-# model = model.fit( datanp )
-# tps2 = time.time ()
-# labels = model.labels_
-# k = model.n_clusters_
-# leaves = model.n_leaves_
-
-#     if(k!=1):
-#         silhouette.append(metrics.silhouette_score(datanp,labels))
-#         davies.append(metrics.davies_bouldin_score(datanp,model.labels_))
-#         calinski.append(metrics.calinski_harabasz_score(datanp,model.labels_))
-
-
-# if(np.argmax(silhouette) == np.argmin(davies) and np.argmin(davies) == np.argmax(calinski) ):
-#     k = np.argmax(calinski) +2
-#     print("On a trouvé un gagnant : " + str(k)+ " clusters")
-
-#     model = cluster.AgglomerativeClustering( distance_threshold = k/30 , linkage = 'single' , n_clusters = None )
-#     model = model.fit( datanp )
-#     labels = model.labels_
-
-
