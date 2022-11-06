@@ -48,7 +48,7 @@ data = [[x[0],x[1]] for x in databrut[0]]
 #Ex pour f0 = [....]
 #Ex pour f1 = [....]
 path2 = './dataset-rapport/'
-databrut = pd.read_csv(path2+"zz1.txt",sep=" ", encoding="ISO-8859-1", skipinitialspace=True)
+databrut = pd.read_csv(path2+"x2.txt",sep=" ", encoding="ISO-8859-1", skipinitialspace=True)
 
 data = databrut.to_numpy()
 

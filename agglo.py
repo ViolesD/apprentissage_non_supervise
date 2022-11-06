@@ -33,7 +33,7 @@ path = './artificial/'
 # datanp = [[x[0],x[1]] for x in databrut[0]]
 
 path2 = './dataset-rapport/'
-databrut = pd.read_csv(path2+"zz1.txt",sep=" ", encoding="ISO-8859-1", skipinitialspace=True)
+databrut = pd.read_csv(path2+"x2.txt",sep=" ", encoding="ISO-8859-1", skipinitialspace=True)
 
 datanp = databrut.to_numpy()
 
@@ -66,7 +66,7 @@ distmatrix = []
 # set di stance_threshold ( 0 ensures we compute the full tree )
 tps1 = time.time ()
 for k in range(1,10):
-    model = cluster.AgglomerativeClustering( distance_threshold = k*700 , linkage = 'single' , n_clusters = None )
+    model = cluster.AgglomerativeClustering( distance_threshold = k*5000 , linkage = 'single' , n_clusters = None )
     model = model.fit( datanp )
     tps2 = time.time ()
     labels = model.labels_
@@ -81,9 +81,9 @@ for k in range(1,10):
 
 if(np.argmax(silhouette) == np.argmin(davies) and np.argmin(davies) == np.argmax(calinski) ):
     k = np.argmax(calinski) +2
-    print("On a trouvé un gagnant : " + str(k)+ " clusters")
+    print("On a trouvé un gagnant : k= " + str(k))
 
-    model = cluster.AgglomerativeClustering( distance_threshold = k*700 , linkage = 'single' , n_clusters = None )
+    model = cluster.AgglomerativeClustering( distance_threshold = k*5000 , linkage = 'single' , n_clusters = None )
     model = model.fit( datanp )
     labels = model.labels_
 
@@ -99,7 +99,7 @@ print (" nb clusters = " , k , " , nb feuilles = " , leaves ,
 
 k = 4
 tps1 = time.time ()
-for k in range(2,100):
+for k in range(2,50):
     model = cluster.AgglomerativeClustering( linkage = 'single' , n_clusters = k )
     model = model.fit ( datanp )
 

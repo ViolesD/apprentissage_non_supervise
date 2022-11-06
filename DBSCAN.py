@@ -35,7 +35,7 @@ path = './artificial/'
 #datanp = [[x[0], x[1]] for x in databrut[0]]
 
 path2 = './dataset-rapport/'
-databrut = pd.read_csv(path2+"y1.txt",sep=" ", encoding="ISO-8859-1", skipinitialspace=True)
+databrut = pd.read_csv(path2+"zz2.txt",sep=" ", encoding="ISO-8859-1", skipinitialspace=True)
 
 datanp = databrut.to_numpy()
 
@@ -49,6 +49,7 @@ plt.show()
 # Distances k plus proches voisins
 # Donnees dans X
 
+tps1 = time.time()
 silhouette = []
 davies = []
 calinski = []
@@ -73,7 +74,7 @@ for k in range(2, 10):
 
 if (np.argmax(silhouette) == np.argmin(davies) and np.argmin(davies) == np.argmax(calinski)):
     k = np.argmax(calinski) + 2
-    print("On a trouvé un gagnant")
+    print("On a trouvé un gagnant : k=" + str(k))
 elif (np.argmin(davies) == np.argmax(calinski)):
     k = np.argmax(calinski) +2
     print("On a trouvé un gagnant : k=" + str(k))
@@ -99,16 +100,17 @@ solution = model.fit(datanp)
 
 labels = solution.labels_
 n_clusters_ = len(set(labels)) - (1 if -1 in labels else 0)
-
+tps2 = time.time()
 
 
 plt.scatter(f0, f1, c=labels, s=8)
 plt.title(" Resultat du clustering DBSCAN, nbr clusters: " + str(n_clusters_))
 plt.show()
+print(" ,...  runtime = " , round ( ( tps2 - tps1 ) * 1000 , 2 ) , " ms" )
 
-tpq2 = time.time()
 
 
+tps1 = time.time()
 silhouette = []
 davies = []
 calinski = []
@@ -123,7 +125,7 @@ for k in range(2, 20):
 
 if (np.argmax(silhouette) == np.argmin(davies) and np.argmin(davies) == np.argmax(calinski)):
     k = np.argmax(calinski) + 2
-    print("On a trouvé un gagnant")
+    print("On a trouvé un gagnant : k=" + str(k))
 elif (np.argmin(davies) == np.argmax(calinski)):
     k = np.argmax(calinski) +2
     print("On a trouvé un gagnant : k=" + str(k))
@@ -135,10 +137,10 @@ elif (np.argmax(silhouette) == np.argmax(calinski)):
     print("On a trouvé un gagnant : k=" + str(k))
 else:
     print("Pas trouvé")
-    k = 5
+    k = np.argmax(silhouette)+2
 
 print(np.argmax(silhouette))
-print(np.argmax(davies))
+print(np.argmin(davies))
 print(np.argmax(calinski))
     
 model = hdbscan.HDBSCAN(min_cluster_size=k)
@@ -146,11 +148,12 @@ solution = model.fit(datanp)
 
 labels = solution.labels_
 n_clusters_ = len(set(labels)) - (1 if -1 in labels else 0)
-
+tps2 = time.time()
 
 plt.scatter(f0, f1, c=labels, s=8)
 plt.title(" Resultat du clustering HDBSCAN, nbr clusters: " + str(n_clusters_))
 plt.show()
+print("nb clusters : " + str(n_clusters_) ," ,...  runtime = " , round ( ( tps2 - tps1 ) * 1000 , 2 ) , " ms" )
 # for k in range(1,10):
 # model = cluster.AgglomerativeClustering( distance_threshold = k/20 , linkage = 'single' , n_clusters = None )
 # model = model.fit( datanp )
