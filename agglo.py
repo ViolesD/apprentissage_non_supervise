@@ -32,7 +32,7 @@ path = './artificial/'
 # datanp = [[x[0],x[1]] for x in databrut[0]]
 
 path2 = './dataset-rapport/'
-databrut = pd.read_csv(path2+"x1.txt",sep=" ", encoding="ISO-8859-1", skipinitialspace=True)
+databrut = pd.read_csv(path2+"x2.txt",sep=" ", encoding="ISO-8859-1", skipinitialspace=True)
 
 datanp = databrut.to_numpy()
 
@@ -45,15 +45,15 @@ plt.title('Donnees initiales')
 plt.show()
 
 
-# # Donnees dans datanp
-# print ( " Dendrogramme 'single' donnees initiales " )
-# linked_mat = shc.linkage ( datanp , 'single')
-# plt.figure ( figsize = ( 12 , 12 ) )
-# shc.dendrogram ( linked_mat ,
-# orientation = 'top',
-# distance_sort = 'descending', 
-# show_leaf_counts = False )
-# plt.show ()
+# Donnees dans datanp
+print ( " Dendrogramme 'single' donnees initiales " )
+linked_mat = shc.linkage ( datanp , 'single')
+plt.figure ( figsize = ( 12 , 12 ) )
+shc.dendrogram ( linked_mat ,
+orientation = 'top',
+distance_sort = 'descending', 
+show_leaf_counts = False )
+plt.show ()
 
 silhouette =[]
 davies = []
@@ -64,8 +64,8 @@ distmatrix = []
 tps1 = time.time ()
 
 # set di stance_threshold ( 0 ensures we compute the full tree )
-for k in range(1,10):
-    model = cluster.AgglomerativeClustering( distance_threshold = k*5000 , linkage = 'single' , n_clusters = None )
+for k in range(1,19):
+    model = cluster.AgglomerativeClustering( distance_threshold =linked_mat.max()* k/20 , linkage = 'single' , n_clusters = None )
     model = model.fit( datanp )
 
     labels = model.labels_
@@ -77,9 +77,9 @@ for k in range(1,10):
         davies.append(metrics.davies_bouldin_score(datanp,model.labels_))
         calinski.append(metrics.calinski_harabasz_score(datanp,model.labels_))
     else:
-        silhouette.append(99999999)
-        davies.append(-99999999)
-        calinski.append(99999999)
+        silhouette.append(-99999999)
+        davies.append(99999999)
+        calinski.append(-99999999)
 
 
 if(np.argmax(silhouette) == np.argmin(davies) and np.argmin(davies) == np.argmax(calinski) ):
@@ -101,7 +101,7 @@ else:
     k=2;
 
 
-model = cluster.AgglomerativeClustering( distance_threshold = k*5000 , linkage = 'single' , n_clusters = None )
+model = cluster.AgglomerativeClustering( distance_threshold = linked_mat.max()* k/20 , linkage = 'single' , n_clusters = None )
 model = model.fit( datanp )
 labels = model.labels_
 
@@ -110,7 +110,7 @@ tps2 = time.time ()
 
 # Affichage clustering
 plt.scatter ( f0 , f1 , c = labels , s = 8 )
-plt.title ( " Resultat du clustering " )
+plt.title ( " Resultat après clustering agglomératif " )
 plt.show()
 print (" nb clusters = " , k , " , nb feuilles = " , leaves ,
         " runtime = " , round (( tps2 - tps1 ) * 1000 , 2 ) ," ms " )
@@ -119,7 +119,7 @@ print (" nb clusters = " , k , " , nb feuilles = " , leaves ,
 # set the number of clusters
 k = 4
 tps1 = time.time ()
-for k in range(2,50):
+for k in range(2,20):
     model = cluster.AgglomerativeClustering( linkage = 'single' , n_clusters = k )
     model = model.fit ( datanp )
 
@@ -164,7 +164,7 @@ leaves = model.n_leaves_
 
 # Affichage clustering
 plt.scatter ( f0 , f1 , c = labels , s = 8 )
-plt.title ( " Resultat du clustering " )
+plt.title ( " Resultat après clustering agglomératif " )
 plt.show()
 print (" nb clusters = " , k , " , nb feuilles = " , leaves ,
         " runtime = " , round (( tps2 - tps1 ) * 1000 , 2 ) ," ms " )

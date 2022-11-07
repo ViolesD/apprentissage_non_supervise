@@ -34,7 +34,7 @@ path = './artificial/'
 #datanp = [[x[0], x[1]] for x in databrut[0]]
 
 path2 = './dataset-rapport/'
-databrut = pd.read_csv(path2+"y1.txt",sep=" ", encoding="ISO-8859-1", skipinitialspace=True)
+databrut = pd.read_csv(path2+"x2.txt",sep=" ", encoding="ISO-8859-1", skipinitialspace=True)
 
 
 
@@ -76,21 +76,21 @@ for k in range(2, 10):
         davies.append(metrics.davies_bouldin_score(datanp, solution.labels_))
         calinski.append(metrics.calinski_harabasz_score(datanp, solution.labels_))
     else:
-        silhouette.append(99999999)
-        davies.append(-99999999)
-        calinski.append(99999999)
+        silhouette.append(-99999999)
+        davies.append(99999999)
+        calinski.append(-99999999)
 
 if (np.argmax(silhouette) == np.argmin(davies) and np.argmin(davies) == np.argmax(calinski)):
     k = np.argmax(calinski) + 2
     print("On a trouvé un gagnant : k=" + str(k))
 elif (np.argmin(davies) == np.argmax(calinski)):
-    k = np.argmax(calinski) +2
+    k = np.argmax(calinski) + 2
     print("On a trouvé un gagnant : k=" + str(k))
 elif (np.argmin(davies) == np.argmax(silhouette)):
-    k = np.argmax(silhouette) +2
+    k = np.argmax(silhouette) + 2
     print("On a trouvé un gagnant : k=" + str(k))   
 elif (np.argmax(silhouette) == np.argmax(calinski)):
-    k = np.argmax(calinski) +2
+    k = np.argmax(calinski) + 2
     print("On a trouvé un gagnant : k=" + str(k))
 else:
     print("Pas trouvé")
@@ -115,56 +115,52 @@ plt.scatter(f0, f1, c=labels, s=8)
 plt.title(" Resultat du clustering DBSCAN, nbr clusters: " + str(n_clusters_))
 plt.show()
 
-
-plt.scatter(f0, f1, c=labels, s=8)
-plt.title(" Resultat du clustering HDBSCAN, nbr clusters: " + str(n_clusters_))
-plt.show()
 print("nb clusters : " + str(n_clusters_) ," ,...  runtime = " , round ( ( tps2 - tps1 ) * 1000 , 2 ) , " ms" )
 
 
 
-tps1 = time.time()
+# tps1 = time.time()
 
-silhouette = []
-davies = []
-calinski = []
-#HDBSCAN method
-for k in range(2, 20):
-    model = hdbscan.HDBSCAN(min_cluster_size=k)
-    solution = model.fit(datanp)
+# silhouette = []
+# davies = []
+# calinski = []
+# #HDBSCAN method
+# for k in range(2, 20):
+#     model = hdbscan.HDBSCAN(min_cluster_size=k)
+#     solution = model.fit(datanp)
 
-    silhouette.append(metrics.silhouette_score(datanp, solution.labels_))
-    davies.append(metrics.davies_bouldin_score(datanp, solution.labels_))
-    calinski.append(metrics.calinski_harabasz_score(datanp, solution.labels_))
+#     silhouette.append(metrics.silhouette_score(datanp, solution.labels_))
+#     davies.append(metrics.davies_bouldin_score(datanp, solution.labels_))
+#     calinski.append(metrics.calinski_harabasz_score(datanp, solution.labels_))
 
-if (np.argmax(silhouette) == np.argmin(davies) and np.argmin(davies) == np.argmax(calinski)):
-    k = np.argmax(calinski) + 2
-    print("On a trouvé un gagnant : k=" + str(k))
-elif (np.argmin(davies) == np.argmax(calinski)):
-    k = np.argmax(calinski) +2
-    print("On a trouvé un gagnant : k=" + str(k))
-elif (np.argmin(davies) == np.argmax(silhouette)):
-    k = np.argmax(silhouette) +2
-    print("On a trouvé un gagnant : k=" + str(k))   
-elif (np.argmax(silhouette) == np.argmax(calinski)):
-    k = np.argmax(calinski) +2
-    print("On a trouvé un gagnant : k=" + str(k))
-else:
-    print("Pas trouvé")
-    k = np.argmax(silhouette)+2
+# if (np.argmax(silhouette) == np.argmin(davies) and np.argmin(davies) == np.argmax(calinski)):
+#     k = np.argmax(calinski) + 2
+#     print("On a trouvé un gagnant : k=" + str(k))
+# elif (np.argmin(davies) == np.argmax(calinski)):
+#     k = np.argmax(calinski) + 2
+#     print("On a trouvé un gagnant : k=" + str(k))
+# elif (np.argmin(davies) == np.argmax(silhouette)):
+#     k = np.argmax(silhouette) + 2
+#     print("On a trouvé un gagnant : k=" + str(k))   
+# elif (np.argmax(silhouette) == np.argmax(calinski)):
+#     k = np.argmax(calinski) + 2
+#     print("On a trouvé un gagnant : k=" + str(k))
+# else:
+#     print("Pas trouvé")
+#     k = np.argmax(silhouette)+2
 
-print(np.argmax(silhouette))
-print(np.argmin(davies))
-print(np.argmax(calinski))
+# print(np.argmax(silhouette))
+# print(np.argmin(davies))
+# print(np.argmax(calinski))
     
-model = hdbscan.HDBSCAN(min_cluster_size=k)
-solution = model.fit(datanp)
+# model = hdbscan.HDBSCAN(min_cluster_size=k)
+# solution = model.fit(datanp)
 
-labels = solution.labels_
-n_clusters_ = len(set(labels)) - (1 if -1 in labels else 0)
-tps2 = time.time()
+# labels = solution.labels_
+# n_clusters_ = len(set(labels)) - (1 if -1 in labels else 0)
+# tps2 = time.time()
 
-plt.scatter(f0, f1, c=labels, s=8)
-plt.title(" Resultat du clustering HDBSCAN, nbr clusters: " + str(n_clusters_))
-plt.show()
-print("nb clusters : " + str(n_clusters_) ," ,...  runtime = " , round ( ( tps2 - tps1 ) * 1000 , 2 ) , " ms" )
+# plt.scatter(f0, f1, c=labels, s=8)
+# plt.title(" Resultat du clustering HDBSCAN, nbr clusters: " + str(n_clusters_))
+# plt.show()
+# print("nb clusters : " + str(n_clusters_) ," ,...  runtime = " , round ( ( tps2 - tps1 ) * 1000 , 2 ) , " ms" )

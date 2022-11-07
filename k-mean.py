@@ -28,7 +28,7 @@ path = './artificial/'
 
 #pour les données spéciales
 path2 = './dataset-rapport/'
-databrut = pd.read_csv(path2+"y1.txt",sep=" ", encoding="ISO-8859-1", skipinitialspace=True)
+databrut = pd.read_csv(path2+"zz1.txt",sep=" ", encoding="ISO-8859-1", skipinitialspace=True)
 
 
 datanp = databrut.to_numpy()
